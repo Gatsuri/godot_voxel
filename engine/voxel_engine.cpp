@@ -173,7 +173,9 @@ bool VoxelEngine::is_volume_valid(VolumeID volume_id) const {
 }
 
 ViewerID VoxelEngine::add_viewer() {
-	return _world.viewers.add(Viewer());
+	ViewerID _world.viewers.add(Viewer());
+	sync_viewers_task_priority_data();
+	return id;
 }
 
 void VoxelEngine::remove_viewer(ViewerID viewer_id) {

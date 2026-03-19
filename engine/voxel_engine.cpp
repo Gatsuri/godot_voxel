@@ -346,20 +346,19 @@ void VoxelEngine::sync_viewers_task_priority_data() {
 
 		// TODO We can avoid the invalidation by using an atomic size or memory barrier?
 		_world.shared_priority_dependency = make_shared_instance<PriorityDependency::ViewersData>();
-		_world.shared_priority_dependency->viewers.resize(viewer_count);
+    	_world.shared_priority_dependency->viewers.resize(viewer_count);
 	}
 
 	PriorityDependency::ViewersData &dep = *_world.shared_priority_dependency;
-
+	
 	size_t i = 0;
 	unsigned int max_distance = 0;
 	_world.viewers.for_each_value([&i, &max_distance, &dep](Viewer &viewer) {
-		dep.viewers[i] = to_vec3f(viewer.world_position);
-		max_distance = math::max(max_distance, viewer.view_distances.max());
-		++i;
+	    dep.viewers[i] = to_vec3f(viewer.world_position);
+	    max_distance = math::max(max_distance, viewer.view_distances.max());
+	    ++i;
 	});
-
-	dep.viewers_count = viewer_count;
+	dep.viewers_count.store(viewer_count, std::memory_order_release);
 
 	// Cancel distance is increased because of two reasons:
 	// - Some volumes use a cubic area which has higher distances on their corners

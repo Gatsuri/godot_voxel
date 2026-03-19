@@ -9,7 +9,7 @@ TaskPriority PriorityDependency::evaluate(uint8_t lod_index, uint8_t band2_prior
 	ZN_ASSERT_RETURN_V(shared != nullptr, priority);
 
 	const StdVector<Vector3f> &viewer_positions = shared->viewers;
-	const unsigned int viewer_count = shared->viewers_count;
+	const unsigned int viewer_count = shared->viewers_count.load(std::memory_order_acquire);
 
 	const Vector3f block_position = world_position;
 
